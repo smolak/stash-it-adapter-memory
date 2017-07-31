@@ -32,14 +32,14 @@ describe('MemoryAdapter', () => {
 
         adapter1.setItem(FOO_KEY, FOO_VALUE);
 
-        const expectedItem1 = createItem(adapter1.buildKey(FOO_KEY), FOO_VALUE, namespace);
+        const expectedItem1 = createItem(FOO_KEY, FOO_VALUE, namespace);
 
         // yes, it needs to be created AFTER item1 was set
         const adapter2 = createMemoryAdapter(defaultOptions);
 
         adapter2.setItem(BAR_KEY, BAR_VALUE);
 
-        const expectedItem2 = createItem(adapter2.buildKey(BAR_KEY), BAR_VALUE, namespace);
+        const expectedItem2 = createItem(BAR_KEY, BAR_VALUE, namespace);
 
         const item1adapter1 = adapter1.getItem(FOO_KEY);
         const item1adapter2 = adapter2.getItem(FOO_KEY);
@@ -76,7 +76,7 @@ describe('MemoryAdapter', () => {
         it('should store and return item', () => {
             const adapter = createMemoryAdapter(defaultOptions);
             const item = adapter.setItem(FOO_KEY, FOO_VALUE);
-            const expectedItem = createItem(adapter.buildKey(FOO_KEY), FOO_VALUE, namespace);
+            const expectedItem = createItem(FOO_KEY, FOO_VALUE, namespace);
 
             expect(item).to.deep.eq(expectedItem);
         });
@@ -90,7 +90,7 @@ describe('MemoryAdapter', () => {
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
                 const item = adapter.getItem(FOO_KEY);
-                const expectedItem = createItem(adapter.buildKey(FOO_KEY), FOO_VALUE, namespace);
+                const expectedItem = createItem(FOO_KEY, FOO_VALUE, namespace);
 
                 expect(item).to.deep.eq(expectedItem);
             });

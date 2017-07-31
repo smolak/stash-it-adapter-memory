@@ -33,33 +33,25 @@ const MemoryAdapter = ({ namespace }) => {
         setItem(key, value, extra = {}) {
             validateKey(key);
 
-            const builtKey = this.buildKey(key);
-
-            return (data[builtKey] = createItem(builtKey, value, namespace, extra));
+            return (data[key] = createItem(key, value, namespace, extra));
         },
 
         getItem(key) {
-            const itemKey = this.buildKey(key);
-
-            return data[itemKey];
+            return data[key];
         },
 
         getExtra(key) {
-            const itemKey = this.buildKey(key);
-
-            const item = data[itemKey];
+            const item = data[key];
 
             return item ? item.extra : undefined;
         },
 
         hasItem(key) {
-            return data.hasOwnProperty(this.buildKey(key));
+            return data.hasOwnProperty(key);
         },
 
         removeItem(key) {
-            const itemKey = this.buildKey(key);
-
-            return Boolean(this.hasItem(key) && delete data[itemKey]);
+            return Boolean(this.hasItem(key) && delete data[key]);
         }
     };
 };
