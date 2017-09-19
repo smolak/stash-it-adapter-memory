@@ -2,10 +2,10 @@
 
 # stash-it-adapter-memory
 
-Memory adapter for stash-it.
-
 [![build status](https://img.shields.io/travis/smolak/stash-it-adapter-memory/master.svg?style=flat-square)](https://travis-ci.org/smolak/stash-it-adapter-memory)
-[![Coverage Status](https://coveralls.io/repos/github/smolak/stash-it-adapter-memory/badge.svg?branch=master)](https://coveralls.io/github/smolak/stash-it-adapter-memory?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/smolak/stash-it-adapter-memory/badge.svg?branch=master)](https://coveralls.io/github/smolak/stash-it-adapter-memory)
+
+Memory adapter for stash-it.
 
 ## Installation
 
