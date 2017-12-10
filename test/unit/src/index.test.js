@@ -1,6 +1,16 @@
 import { expect } from 'chai';
 import { createItem } from 'stash-it';
-import { FOO_KEY, FOO_VALUE, BAR_KEY, BAR_VALUE, NONEXISTENT_KEY, testKey, testNamespace } from 'stash-it-test-helpers';
+import {
+    BAR_KEY,
+    BAR_VALUE,
+    FOO_EXTRA,
+    FOO_KEY,
+    FOO_VALUE,
+    NONEXISTENT_KEY,
+    nonObjectValues,
+    testKey,
+    testNamespace
+} from 'stash-it-test-helpers';
 
 import createMemoryAdapter from '../../../src/index';
 
@@ -61,18 +71,6 @@ describe('MemoryAdapter', () => {
             testKey(adapter.setItem);
         });
 
-        describe('extra validation', () => {
-            context('when extra contains namespace property', () => {
-                it('should throw', () => {
-                    const adapter = createMemoryAdapter(defaultOptions);
-
-                    expect(adapter.setItem.bind(adapter, FOO_KEY, FOO_VALUE, { namespace })).to.throw(
-                        '`extra` can\'t contain `namespace` property.'
-                    );
-                });
-            });
-        });
-
         it('should store and return item', () => {
             const adapter = createMemoryAdapter(defaultOptions);
             const item = adapter.setItem(FOO_KEY, FOO_VALUE);
@@ -106,6 +104,102 @@ describe('MemoryAdapter', () => {
         });
     });
 
+    describe('addExtra', () => {
+        context('when item does not exist', () => {
+            it('should return undefined', () => {
+                const adapter = createMemoryAdapter(defaultOptions);
+                const extra = adapter.addExtra(NONEXISTENT_KEY, FOO_EXTRA);
+
+                expect(extra).to.be.undefined;
+            });
+        });
+
+        it('should add extra to existing one and return combined extra', () => {
+            const adapter = createMemoryAdapter(defaultOptions);
+
+            adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
+
+            const addedExtra = { something: 'else' };
+            const returnedExtra = adapter.addExtra(FOO_KEY, addedExtra);
+            const expectedCombinedExtra = Object.assign({}, FOO_EXTRA, addedExtra);
+            const item = adapter.getItem(FOO_KEY);
+
+            expect(returnedExtra).to.deep.equal(expectedCombinedExtra);
+            expect(returnedExtra).to.deep.equal(item.extra);
+        });
+
+        context('when added extra contains properties of existing extra', () => {
+            it('should overwrite existing properties with new ones', () => {
+                const adapter = createMemoryAdapter(defaultOptions);
+                const extraToSet = Object.assign({}, FOO_EXTRA, { something: 'else' });
+
+                adapter.setItem(FOO_KEY, FOO_VALUE, extraToSet);
+
+                const addedExtra = {
+                    something: 'entirely different'
+                };
+                const returnedExtra = adapter.addExtra(FOO_KEY, addedExtra);
+                const expectedCombinedExtra = Object.assign({}, extraToSet, addedExtra);
+                const item = adapter.getItem(FOO_KEY);
+
+                expect(returnedExtra).to.deep.equal(expectedCombinedExtra);
+                expect(returnedExtra).to.deep.equal(item.extra);
+            });
+        });
+
+        context('when extra is not an object', () => {
+            it('should throw', () => {
+                const adapter = createMemoryAdapter(defaultOptions);
+
+                nonObjectValues.forEach((nonObjectValue) => {
+                    if (nonObjectValue !== undefined) {
+                        expect(adapter.addExtra.bind(adapter, FOO_KEY, nonObjectValue)).to.throw(
+                            '`extra` must be an object.'
+                        );
+                    }
+                });
+            });
+        });
+    });
+
+    describe('setExtra', () => {
+        context('when item does not exist', () => {
+            it('should return undefined', () => {
+                const adapter = createMemoryAdapter(defaultOptions);
+                const extra = adapter.setExtra(NONEXISTENT_KEY, FOO_EXTRA);
+
+                expect(extra).to.be.undefined;
+            });
+        });
+
+        it('should store and return extra', () => {
+            const adapter = createMemoryAdapter(defaultOptions);
+
+            adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
+
+            const newExtra = { something: 'else' };
+            const returnedExtra = adapter.setExtra(FOO_KEY, newExtra);
+            const item = adapter.getItem(FOO_KEY);
+
+            expect(returnedExtra).to.deep.equal(newExtra);
+            expect(returnedExtra).to.deep.equal(item.extra);
+        });
+
+        context('when extra is not an object', () => {
+            it('should throw', () => {
+                const adapter = createMemoryAdapter(defaultOptions);
+
+                nonObjectValues.forEach((nonObjectValue) => {
+                    if (nonObjectValue !== undefined) {
+                        expect(adapter.setExtra.bind(adapter, FOO_KEY, nonObjectValue)).to.throw(
+                            '`extra` must be an object.'
+                        );
+                    }
+                });
+            });
+        });
+    });
+
     describe('getExtra', () => {
         context('when item exists', () => {
             it('should return extra', () => {
@@ -114,10 +208,7 @@ describe('MemoryAdapter', () => {
                 adapter.setItem(FOO_KEY, FOO_VALUE, { some: 'extra' });
 
                 const extra = adapter.getExtra(FOO_KEY);
-                const expectedExtra = {
-                    namespace: defaultOptions.namespace,
-                    some: 'extra'
-                };
+                const expectedExtra = { some: 'extra' };
 
                 expect(extra).to.deep.equal(expectedExtra);
             });
