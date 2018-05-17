@@ -28,27 +28,22 @@
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.2",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
+    "babel-plugin-istanbul": "^4.1.6",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "chai": "^3.5.0",
-    "eslint": "^4.11.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-markdown": "^1.0.0-beta.7",
-    "eslint-plugin-mocha": "^4.11.0",
-    "mocha": "^4.0.1",
-    "nyc": "^11.3.0",
-    "sinon": "^4.1.2",
-    "sinon-chai": "^2.14.0",
-    "stash-it": "^2.0.0",
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-markdown": "^1.0.0-beta.8",
+    "eslint-plugin-mocha": "^5.0.0",
+    "mocha": "^5.1.1",
+    "nyc": "^11.7.1",
+    "sinon": "^5.0.7",
+    "sinon-chai": "^3.0.0",
+    "stash-it": "^3.0.0-rc.2",
     "stash-it-test-helpers": "^1.5.1"
   },
   "peerDependencies": {
-    "stash-it": "^2.0.0"
+    "stash-it": "^3.0.0-rc.2"
   }
 }
