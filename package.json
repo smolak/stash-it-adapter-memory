@@ -41,10 +41,10 @@
     "nyc": "^12.0.2",
     "sinon": "^5.0.10",
     "sinon-chai": "^3.1.0",
-    "stash-it": "^3.0.0-rc.2",
+    "stash-it": "^3.0.0-rc.3",
     "stash-it-test-helpers": "^1.5.1"
   },
   "peerDependencies": {
-    "stash-it": "^3.0.0-rc.2"
+    "stash-it": "^3.0.0-rc.3"
   }
 }
