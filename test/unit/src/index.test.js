@@ -29,6 +29,14 @@ describe('MemoryAdapter', () => {
         testNamespace(createMemoryAdapter);
     });
 
+    describe('getNamespace', () => {
+        it('should return namespace', () => {
+            const adapter = createMemoryAdapter(defaultOptions);
+
+            expect(adapter.getNamespace()).to.equal('namespace');
+        });
+    });
+
     describe('buildKey', () => {
         it('should return key string composed of passed key and namespace', () => {
             const memoryAdapter = createMemoryAdapter(defaultOptions);

@@ -32,6 +32,10 @@ const MemoryAdapter = ({ namespace }) => {
     validateNamespace(namespace);
 
     return {
+        getNamespace() {
+            return namespace;
+        },
+
         buildKey(key) {
             return `${namespace}.${key}`;
         },
