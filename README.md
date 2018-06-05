@@ -7,6 +7,9 @@
 
 Memory adapter for [stash-it](https://www.npmjs.com/package/stash-it).
 
+It's build in **ES6** so if you need to run it in an older environment,
+you will need to transpile it.
+
 ## Installation
 
 ```sh
