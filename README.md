@@ -31,7 +31,7 @@ E.g. `some-namespace_123`.
 
 If validation fails, it will throw.
 
-For available methods, check [adapters section in stash-it](https://smolak.github.io/stash-it/adapters.html) (all adapters have the same API).
+For available methods, check [adapters section in stash-it](https://jaceks.gitbooks.io/stash-it/content/advanced-usage/adapters/methods.html) (all adapters have the same API).
 
 ### Heads-up!
 
