@@ -1,15 +1,5 @@
 import { createItem } from 'stash-it';
 
-function validateNamespace(namespace) {
-    if (typeof namespace !== 'string') {
-        throw new Error('`namespace` must be a string.');
-    }
-
-    if (false === /^[A-Za-z0-9_-]+$/i.test(namespace)) {
-        throw Error('`namespace` can contain only letters, numbers, `_` or `-`.');
-    }
-}
-
 function validateKey(key) {
     if (typeof key !== 'string') {
         throw new Error('`key` must be a string.');
@@ -28,22 +18,16 @@ function validateExtra(extra) {
 
 const data = {};
 
-const MemoryAdapter = ({ namespace }) => {
-    validateNamespace(namespace);
-
+const MemoryAdapter = () => {
     return {
-        getNamespace() {
-            return namespace;
-        },
-
         buildKey(key) {
-            return `${namespace}.${key}`;
+            return key;
         },
 
         setItem(key, value, extra = {}) {
             validateKey(key);
 
-            return (data[key] = createItem(key, value, namespace, extra));
+            return (data[key] = createItem(key, value, extra));
         },
 
         getItem(key) {

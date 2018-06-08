@@ -8,56 +8,40 @@ import {
     FOO_VALUE,
     NONEXISTENT_KEY,
     nonObjectValues,
-    testKey,
-    testNamespace
+    testKey
 } from 'stash-it-test-helpers';
 
 import createMemoryAdapter from '../../../src/index';
 
 describe('MemoryAdapter', () => {
-    const namespace = 'namespace';
-    const defaultOptions = { namespace };
-
     beforeEach(() => {
-        const memoryAdapter = createMemoryAdapter(defaultOptions);
+        const memoryAdapter = createMemoryAdapter();
 
         memoryAdapter.removeItem(FOO_KEY);
         memoryAdapter.removeItem(BAR_KEY);
     });
 
-    describe('namespace validation', () => {
-        testNamespace(createMemoryAdapter);
-    });
-
-    describe('getNamespace', () => {
-        it('should return namespace', () => {
-            const adapter = createMemoryAdapter(defaultOptions);
-
-            expect(adapter.getNamespace()).to.equal('namespace');
-        });
-    });
-
     describe('buildKey', () => {
-        it('should return key string composed of passed key and namespace', () => {
-            const memoryAdapter = createMemoryAdapter(defaultOptions);
+        it('should return built key', () => {
+            const memoryAdapter = createMemoryAdapter();
 
-            expect(memoryAdapter.buildKey('key')).to.eq('namespace.key');
+            expect(memoryAdapter.buildKey('key')).to.eq('key');
         });
     });
 
     it('should store data between different adapter instances', () => {
-        const adapter1 = createMemoryAdapter(defaultOptions);
+        const adapter1 = createMemoryAdapter();
 
         adapter1.setItem(FOO_KEY, FOO_VALUE);
 
-        const expectedItem1 = createItem(FOO_KEY, FOO_VALUE, namespace);
+        const expectedItem1 = createItem(FOO_KEY, FOO_VALUE);
 
         // yes, it needs to be created AFTER item1 was set
-        const adapter2 = createMemoryAdapter(defaultOptions);
+        const adapter2 = createMemoryAdapter();
 
         adapter2.setItem(BAR_KEY, BAR_VALUE);
 
-        const expectedItem2 = createItem(BAR_KEY, BAR_VALUE, namespace);
+        const expectedItem2 = createItem(BAR_KEY, BAR_VALUE);
 
         const item1adapter1 = adapter1.getItem(FOO_KEY);
         const item1adapter2 = adapter2.getItem(FOO_KEY);
@@ -74,15 +58,15 @@ describe('MemoryAdapter', () => {
 
     describe('setItem', () => {
         describe('key validation', () => {
-            const adapter = createMemoryAdapter(defaultOptions);
+            const adapter = createMemoryAdapter();
 
             testKey(adapter.setItem);
         });
 
         it('should store and return item', () => {
-            const adapter = createMemoryAdapter(defaultOptions);
+            const adapter = createMemoryAdapter();
             const item = adapter.setItem(FOO_KEY, FOO_VALUE);
-            const expectedItem = createItem(FOO_KEY, FOO_VALUE, namespace);
+            const expectedItem = createItem(FOO_KEY, FOO_VALUE);
 
             expect(item).to.deep.eq(expectedItem);
         });
@@ -91,12 +75,12 @@ describe('MemoryAdapter', () => {
     describe('getItem', () => {
         context('when item exists', () => {
             it('should return that item', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
                 const item = adapter.getItem(FOO_KEY);
-                const expectedItem = createItem(FOO_KEY, FOO_VALUE, namespace);
+                const expectedItem = createItem(FOO_KEY, FOO_VALUE);
 
                 expect(item).to.deep.eq(expectedItem);
             });
@@ -104,7 +88,7 @@ describe('MemoryAdapter', () => {
 
         context('when item does not exist', () => {
             it('should return undefined', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const item = adapter.getItem(NONEXISTENT_KEY);
 
                 expect(item).to.be.undefined;
@@ -115,7 +99,7 @@ describe('MemoryAdapter', () => {
     describe('addExtra', () => {
         context('when item does not exist', () => {
             it('should return undefined', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const extra = adapter.addExtra(NONEXISTENT_KEY, FOO_EXTRA);
 
                 expect(extra).to.be.undefined;
@@ -123,7 +107,7 @@ describe('MemoryAdapter', () => {
         });
 
         it('should add extra to existing one and return combined extra', () => {
-            const adapter = createMemoryAdapter(defaultOptions);
+            const adapter = createMemoryAdapter();
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
 
@@ -138,7 +122,7 @@ describe('MemoryAdapter', () => {
 
         context('when added extra contains properties of existing extra', () => {
             it('should overwrite existing properties with new ones', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const extraToSet = Object.assign({}, FOO_EXTRA, { something: 'else' });
 
                 adapter.setItem(FOO_KEY, FOO_VALUE, extraToSet);
@@ -157,7 +141,7 @@ describe('MemoryAdapter', () => {
 
         context('when extra is not an object', () => {
             it('should throw', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 nonObjectValues.forEach((nonObjectValue) => {
                     if (nonObjectValue !== undefined) {
@@ -173,7 +157,7 @@ describe('MemoryAdapter', () => {
     describe('setExtra', () => {
         context('when item does not exist', () => {
             it('should return undefined', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const extra = adapter.setExtra(NONEXISTENT_KEY, FOO_EXTRA);
 
                 expect(extra).to.be.undefined;
@@ -181,7 +165,7 @@ describe('MemoryAdapter', () => {
         });
 
         it('should store and return extra', () => {
-            const adapter = createMemoryAdapter(defaultOptions);
+            const adapter = createMemoryAdapter();
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
 
@@ -195,7 +179,7 @@ describe('MemoryAdapter', () => {
 
         context('when extra is not an object', () => {
             it('should throw', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 nonObjectValues.forEach((nonObjectValue) => {
                     if (nonObjectValue !== undefined) {
@@ -211,7 +195,7 @@ describe('MemoryAdapter', () => {
     describe('getExtra', () => {
         context('when item exists', () => {
             it('should return extra', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 adapter.setItem(FOO_KEY, FOO_VALUE, { some: 'extra' });
 
@@ -224,7 +208,7 @@ describe('MemoryAdapter', () => {
 
         context('when item does not exist', () => {
             it('should return undefined', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const extra = adapter.getExtra(NONEXISTENT_KEY);
 
                 expect(extra).to.be.undefined;
@@ -235,7 +219,7 @@ describe('MemoryAdapter', () => {
     describe('hasItem', () => {
         context('when item exists', () => {
             it('should return true', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
@@ -245,7 +229,7 @@ describe('MemoryAdapter', () => {
 
         context('when item does not exist', () => {
             it('should return false', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 expect(adapter.hasItem(NONEXISTENT_KEY)).to.be.false;
             });
@@ -255,7 +239,7 @@ describe('MemoryAdapter', () => {
     describe('removeItem', () => {
         context('when item exists', () => {
             it('should remove that item returning true', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
 
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
@@ -267,7 +251,7 @@ describe('MemoryAdapter', () => {
 
         context('when item does not exist', () => {
             it('should not remove that item and return false', () => {
-                const adapter = createMemoryAdapter(defaultOptions);
+                const adapter = createMemoryAdapter();
                 const result = adapter.removeItem(NONEXISTENT_KEY);
 
                 expect(result).to.be.false;
