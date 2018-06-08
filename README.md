@@ -63,7 +63,7 @@ cache2.hasItem('key'); // true
 
 And that goes for all of the methods.
 
-#### How to prevent this?
+#### How to bypass this (if needed)?
 
 The suggested way is to use a plugin with hook for `preBuildKey` event.
 This plugin should prefix / suffix the key being passed to the even
