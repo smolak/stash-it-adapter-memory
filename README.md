@@ -22,30 +22,30 @@ npm i stash-it-adapter-memory --save
 import { createCache } from 'stash-it';
 import createMemoryAdapter from 'stash-it-adapter-memory';
 
-const adapter = createMemoryAdapter({ namespace: 'some-namespace' });
+const adapter = createMemoryAdapter();
 const cache = createCache(adapter);
 ```
 
 And that's it. You are ready to go.
 
-The only configuration you need to provide is `namespace` (as a property in passed object).
-`namespace` must be a string consisting only out of letters (azAZ), numbers, and -, _ characters in any combination.
-E.g. `some-namespace_123`.
-
-If validation fails, it will throw.
-
 For available methods, check [adapters section in stash-it](https://jaceks.gitbooks.io/stash-it/content/advanced-usage/adapters/methods.html) (all adapters have the same API).
 
 ### Heads-up!
 
-For adapters with the same namespace, any instance of cache will have access to all items stored in memory, regardles of which cache instance was used:
+Any instance of cache will have access to all items stored in memory,
+regardles of which cache instance was used. This is because all of the
+adapters are to behave in the same manner, e.g. connecting to the very
+same instance of redis / mongo / ... will grant access to the very same
+items stored there. So should this adapter.
+
+Have a look:
 
 ```javascript
 // file1.js - executed BEFORE
 import { createCache } from 'stash-it';
 import createMemoryAdapter from 'stash-it-adapter-memory';
 
-const adapter = createMemoryAdapter({ namespace: 'some-namespace' });
+const adapter = createMemoryAdapter();
 const cache1 = createCache(adapter);
 
 cache1.setItem('key', 'value');
@@ -55,7 +55,7 @@ cache1.setItem('key', 'value');
 import { createCache } from 'stash-it';
 import createMemoryAdapter from 'stash-it-adapter-memory';
 
-const adapter = createMemoryAdapter({ namespace: 'some-namespace' });
+const adapter = createMemoryAdapter();
 const cache2 = createCache(adapter);
 
 cache2.hasItem('key'); // true
@@ -65,25 +65,11 @@ And that goes for all of the methods.
 
 #### How to prevent this?
 
-Use different namespaces for each adapter:
+The suggested way is to use a plugin with hook for `preBuildKey` event.
+This plugin should prefix / suffix the key being passed to the even
+handler. When a new key is built using the prefix / suffix, it will be
+then used to set / get item from persistance to which adapter gvies
+access to.
 
-```javascript
-// file1.js - executed BEFORE
-import { createCache } from 'stash-it';
-import createMemoryAdapter from 'stash-it-adapter-memory';
-
-const adapter = createMemoryAdapter({ namespace: 'some-namespace' });
-const cache1 = createCache(adapter);
-
-cache1.setItem('key', 'value');
-
-
-// file2.js - executed AFTER
-import { createCache } from 'stash-it';
-import createMemoryAdapter from 'stash-it-adapter-memory';
-
-const adapter = createMemoryAdapter({ namespace: 'some-other-namespace' });
-const cache2 = createCache(adapter);
-
-cache2.hasItem('key'); // false
-```
+For more information on how hooks / plugins work, checkout
+[stash-it](https://www.npmjs.com/package/stash-it)'s docs.
