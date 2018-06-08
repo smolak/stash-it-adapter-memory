@@ -66,7 +66,7 @@ And that goes for all of the methods.
 #### How to bypass this (if needed)?
 
 The suggested way is to use a plugin with hook for `preBuildKey` event.
-This plugin should prefix / suffix the key being passed to the even
+This plugin should prefix / suffix the key being passed to the event
 handler. When a new key is built using the prefix / suffix, it will be
 then used to set / get item from persistance to which adapter gvies
 access to.
