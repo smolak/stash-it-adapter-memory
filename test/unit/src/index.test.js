@@ -6,9 +6,7 @@ import {
     FOO_EXTRA,
     FOO_KEY,
     FOO_VALUE,
-    NONEXISTENT_KEY,
-    nonObjectValues,
-    testKey
+    NONEXISTENT_KEY
 } from 'stash-it-test-helpers';
 
 import createMemoryAdapter from '../../../src/index';
@@ -57,12 +55,6 @@ describe('MemoryAdapter', () => {
     });
 
     describe('setItem', () => {
-        describe('key validation', () => {
-            const adapter = createMemoryAdapter();
-
-            testKey(adapter.setItem);
-        });
-
         it('should store and return item', () => {
             const adapter = createMemoryAdapter();
             const item = adapter.setItem(FOO_KEY, FOO_VALUE);
@@ -138,20 +130,6 @@ describe('MemoryAdapter', () => {
                 expect(returnedExtra).to.deep.equal(item.extra);
             });
         });
-
-        context('when extra is not an object', () => {
-            it('should throw', () => {
-                const adapter = createMemoryAdapter();
-
-                nonObjectValues.forEach((nonObjectValue) => {
-                    if (nonObjectValue !== undefined) {
-                        expect(adapter.addExtra.bind(adapter, FOO_KEY, nonObjectValue)).to.throw(
-                            '`extra` must be an object.'
-                        );
-                    }
-                });
-            });
-        });
     });
 
     describe('setExtra', () => {
@@ -175,20 +153,6 @@ describe('MemoryAdapter', () => {
 
             expect(returnedExtra).to.deep.equal(newExtra);
             expect(returnedExtra).to.deep.equal(item.extra);
-        });
-
-        context('when extra is not an object', () => {
-            it('should throw', () => {
-                const adapter = createMemoryAdapter();
-
-                nonObjectValues.forEach((nonObjectValue) => {
-                    if (nonObjectValue !== undefined) {
-                        expect(adapter.setExtra.bind(adapter, FOO_KEY, nonObjectValue)).to.throw(
-                            '`extra` must be an object.'
-                        );
-                    }
-                });
-            });
         });
     });
 
