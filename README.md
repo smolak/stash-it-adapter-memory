@@ -72,4 +72,4 @@ then used to set / get item from persistance to which adapter gvies
 access to.
 
 For more information on how hooks / plugins work, checkout
-[stash-it](https://www.npmjs.com/package/stash-it)'s docs.
+[stash-it's docs](https://stash-it.gitbook.io/stash-it/).
