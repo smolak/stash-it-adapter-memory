@@ -1,6 +1,6 @@
 {
   "name": "stash-it-adapter-memory",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Memory adapter for stash-it.",
   "author": "Jacek Smolak <jacek.smolak@gmail.com>",
   "main": "build/index.js",
