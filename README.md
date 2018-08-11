@@ -28,7 +28,7 @@ const cache = createCache(adapter);
 
 And that's it. You are ready to go.
 
-For available methods, check [adapters section in stash-it](https://jaceks.gitbooks.io/stash-it/content/advanced-usage/adapters/methods.html) (all adapters have the same API).
+For available methods, check [adapters API section](https://stash-it.gitbook.io/stash-it/api/adapter) (all adapters have the same API).
 
 ### Heads-up!
 
@@ -65,11 +65,4 @@ And that goes for all of the methods.
 
 #### How to bypass this (if needed)?
 
-The suggested way is to use a plugin with hook for `preBuildKey` event.
-This plugin should prefix / suffix the key being passed to the event
-handler. When a new key is built using the prefix / suffix, it will be
-then used to set / get item from persistance to which adapter gvies
-access to.
-
-For more information on how hooks / plugins work, checkout
-[stash-it's docs](https://stash-it.gitbook.io/stash-it/).
+The suggested way is to use a [prefix / suffix plugin](https://www.npmjs.com/package/stash-it-plugin-prefixsuffix).
