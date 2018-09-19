@@ -220,7 +220,7 @@ describe('MemoryAdapter', () => {
 
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
-                expect(adapter.hasItem(FOO_KEY)).to.be.true;
+                expect(adapter.hasItem(FOO_KEY)).to.eventually.be.true;
             });
         });
 
@@ -228,7 +228,7 @@ describe('MemoryAdapter', () => {
             it('should return false', () => {
                 const adapter = createMemoryAdapter();
 
-                expect(adapter.hasItem(NONEXISTENT_KEY)).to.be.false;
+                expect(adapter.hasItem(NONEXISTENT_KEY)).to.eventually.be.false;
             });
         });
     });
@@ -240,18 +240,15 @@ describe('MemoryAdapter', () => {
 
                 adapter.setItem(FOO_KEY, FOO_VALUE);
 
-                const result = adapter.removeItem(FOO_KEY);
-
-                expect(result).to.be.true;
+                expect(adapter.removeItem(FOO_KEY)).to.eventually.be.true;
             });
         });
 
         context('when item does not exist', () => {
             it('should not remove that item and return false', () => {
                 const adapter = createMemoryAdapter();
-                const result = adapter.removeItem(NONEXISTENT_KEY);
 
-                expect(result).to.be.false;
+                expect(adapter.removeItem(NONEXISTENT_KEY)).to.eventually.be.false;
             });
         });
     });

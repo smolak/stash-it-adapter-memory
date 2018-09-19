@@ -49,11 +49,13 @@ const MemoryAdapter = () => {
         },
 
         hasItem(key) {
-            return data.hasOwnProperty(key);
+            return Promise.resolve(data.hasOwnProperty(key));
         },
 
         removeItem(key) {
-            return Boolean(this.hasItem(key) && delete data[key]);
+            return this.hasItem(key).then((result) => {
+                return Boolean(result && delete data[key]);
+            });
         }
     };
 };
