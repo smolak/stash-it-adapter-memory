@@ -9,7 +9,9 @@ const MemoryAdapter = () => {
         },
 
         setItem(key, value, extra = {}) {
-            const item = (items[key] = createItem(key, value, extra));
+            const item = createItem(key, value, extra);
+
+            items[key] = item;
 
             return Promise.resolve(item);
         },
