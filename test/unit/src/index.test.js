@@ -47,11 +47,12 @@ describe('MemoryAdapter', () => {
         const item2adapter1 = adapter1.getItem(BAR_KEY);
         const item2adapter2 = adapter2.getItem(BAR_KEY);
 
-        expect(item1adapter1).to.deep.eq(expectedItem1);
-        expect(item1adapter2).to.deep.eq(expectedItem1);
-
-        expect(item2adapter1).to.deep.eq(expectedItem2);
-        expect(item2adapter2).to.deep.eq(expectedItem2);
+        return Promise.all([
+            expect(item1adapter1).to.eventually.deep.equal(expectedItem1),
+            expect(item1adapter2).to.eventually.deep.equal(expectedItem1),
+            expect(item2adapter1).to.eventually.deep.equal(expectedItem2),
+            expect(item2adapter2).to.eventually.deep.equal(expectedItem2)
+        ]);
     });
 
     describe('setItem', () => {
@@ -67,22 +68,18 @@ describe('MemoryAdapter', () => {
         context('when item exists', () => {
             it('should return that item', () => {
                 const adapter = createMemoryAdapter();
-
-                adapter.setItem(FOO_KEY, FOO_VALUE);
-
-                const item = adapter.getItem(FOO_KEY);
                 const expectedItem = createItem(FOO_KEY, FOO_VALUE);
 
-                expect(item).to.deep.eq(expectedItem);
+                adapter.setItem(FOO_KEY, FOO_VALUE);
+                expect(adapter.getItem(FOO_KEY)).to.eventually.deep.equal(expectedItem);
             });
         });
 
         context('when item does not exist', () => {
             it('should return undefined', () => {
                 const adapter = createMemoryAdapter();
-                const item = adapter.getItem(NONEXISTENT_KEY);
 
-                expect(item).to.be.undefined;
+                expect(adapter.getItem(NONEXISTENT_KEY)).to.eventually.equal(undefined);
             });
         });
     });
@@ -101,15 +98,15 @@ describe('MemoryAdapter', () => {
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA).then(() => {
                 const addedExtra = { something: 'else' };
+                const expectedCombinedExtra = Object.assign({}, FOO_EXTRA, addedExtra);
 
                 adapter.addExtra(FOO_KEY, addedExtra).then((extra) => {
-                    const expectedCombinedExtra = Object.assign({}, FOO_EXTRA, addedExtra);
-                    const item = adapter.getItem(FOO_KEY);
+                    adapter.getItem(FOO_KEY).then((item) => {
+                        expect(extra).to.deep.equal(expectedCombinedExtra);
+                        expect(item.extra).to.deep.equal(extra);
 
-                    expect(extra).to.deep.equal(expectedCombinedExtra);
-                    expect(item.extra).to.deep.equal(extra);
-
-                    done();
+                        done();
+                    });
                 });
             });
         });
@@ -132,11 +129,11 @@ describe('MemoryAdapter', () => {
                 const addedExtra = { something: 'else' };
 
                 adapter.addExtra(FOO_KEY, addedExtra).then((extra) => {
-                    const item = adapter.getItem(FOO_KEY);
+                    adapter.getItem(FOO_KEY).then((item) => {
+                        expect(item.extra).to.deep.equal(extra);
 
-                    expect(item.extra).to.deep.equal(extra);
-
-                    done();
+                        done();
+                    });
                 });
             });
         });
@@ -150,12 +147,13 @@ describe('MemoryAdapter', () => {
                 adapter.setItem(FOO_KEY, FOO_VALUE, extraToSet);
                 adapter.addExtra(FOO_KEY, addedExtra).then((extra) => {
                     const expectedCombinedExtra = Object.assign({}, extraToSet, addedExtra);
-                    const item = adapter.getItem(FOO_KEY);
 
-                    expect(extra).to.deep.equal(expectedCombinedExtra);
-                    expect(extra).to.deep.equal(item.extra);
+                    adapter.getItem(FOO_KEY).then((item) => {
+                        expect(extra).to.deep.equal(expectedCombinedExtra);
+                        expect(extra).to.deep.equal(item.extra);
 
-                    done();
+                        done();
+                    });
                 });
             });
         });
@@ -185,11 +183,11 @@ describe('MemoryAdapter', () => {
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
             adapter.setExtra(FOO_KEY, newExtra).then((extra) => {
-                const item = adapter.getItem(FOO_KEY);
+                adapter.getItem(FOO_KEY).then((item) => {
+                    expect(item.extra).to.deep.equal(extra);
 
-                expect(item.extra).to.deep.equal(extra);
-
-                done();
+                    done();
+                });
             });
         });
     });

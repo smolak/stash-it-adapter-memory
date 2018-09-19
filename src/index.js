@@ -9,34 +9,36 @@ const MemoryAdapter = () => {
         },
 
         setItem(key, value, extra = {}) {
-            return Promise.resolve(data[key] = createItem(key, value, extra));
+            const item = (data[key] = createItem(key, value, extra));
+
+            return Promise.resolve(item);
         },
 
         getItem(key) {
-            return data[key];
+            return Promise.resolve(data[key]);
         },
 
         addExtra(key, extra) {
-            const item = this.getItem(key);
+            return this.getItem(key).then((item) => {
+                if (!item) {
+                    return Promise.resolve(undefined);
+                }
 
-            if (!item) {
-                return Promise.resolve(undefined);
-            }
+                const currentExtra = item.extra;
+                const combinedExtra = Object.assign({}, currentExtra, extra);
 
-            const currentExtra = item.extra;
-            const combinedExtra = Object.assign({}, currentExtra, extra);
-
-            return this.setItem(key, item.value, combinedExtra).then((newItem) => newItem.extra);
+                return this.setItem(key, item.value, combinedExtra).then((newItem) => newItem.extra);
+            });
         },
 
         setExtra(key, extra) {
-            const item = this.getItem(key);
+            return this.getItem(key).then((item) => {
+                if (!item) {
+                    return Promise.resolve(undefined);
+                }
 
-            if (!item) {
-                return Promise.resolve(undefined);
-            }
-
-            return this.setItem(key, item.value, extra).then((newItem) => newItem.extra);
+                return this.setItem(key, item.value, extra).then((newItem) => newItem.extra);
+            });
         },
 
         getExtra(key) {
