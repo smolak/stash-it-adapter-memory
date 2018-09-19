@@ -1,6 +1,6 @@
 import { createItem } from 'stash-it';
 
-const data = {};
+const items = {};
 
 const MemoryAdapter = () => {
     return {
@@ -9,13 +9,13 @@ const MemoryAdapter = () => {
         },
 
         setItem(key, value, extra = {}) {
-            const item = (data[key] = createItem(key, value, extra));
+            const item = (items[key] = createItem(key, value, extra));
 
             return Promise.resolve(item);
         },
 
         getItem(key) {
-            return Promise.resolve(data[key]);
+            return Promise.resolve(items[key]);
         },
 
         addExtra(key, extra) {
@@ -42,19 +42,19 @@ const MemoryAdapter = () => {
         },
 
         getExtra(key) {
-            const item = data[key];
+            const item = items[key];
             const result = item ? item.extra : undefined;
 
             return Promise.resolve(result);
         },
 
         hasItem(key) {
-            return Promise.resolve(data.hasOwnProperty(key));
+            return Promise.resolve(items.hasOwnProperty(key));
         },
 
         removeItem(key) {
             return this.hasItem(key).then((result) => {
-                return Boolean(result && delete data[key]);
+                return Boolean(result && delete items[key]);
             });
         }
     };
