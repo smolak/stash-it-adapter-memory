@@ -9,7 +9,7 @@ const MemoryAdapter = () => {
         },
 
         setItem(key, value, extra = {}) {
-            return (data[key] = createItem(key, value, extra));
+            return Promise.resolve(data[key] = createItem(key, value, extra));
         },
 
         getItem(key) {
@@ -20,26 +20,23 @@ const MemoryAdapter = () => {
             const item = this.getItem(key);
 
             if (!item) {
-                return undefined;
+                return Promise.resolve(undefined);
             }
 
             const currentExtra = item.extra;
             const combinedExtra = Object.assign({}, currentExtra, extra);
-            const newItem = this.setItem(key, item.value, combinedExtra);
 
-            return newItem.extra;
+            return this.setItem(key, item.value, combinedExtra).then((newItem) => newItem.extra);
         },
 
         setExtra(key, extra) {
             const item = this.getItem(key);
 
             if (!item) {
-                return undefined;
+                return Promise.resolve(undefined);
             }
 
-            const newItem = this.setItem(key, item.value, extra);
-
-            return newItem.extra;
+            return this.setItem(key, item.value, extra).then((newItem) => newItem.extra);
         },
 
         getExtra(key) {
