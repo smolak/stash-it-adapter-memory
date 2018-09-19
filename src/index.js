@@ -23,7 +23,7 @@ const MemoryAdapter = () => {
         addExtra(key, extra) {
             return this.getItem(key).then((item) => {
                 if (!item) {
-                    return Promise.resolve(undefined);
+                    return undefined;
                 }
 
                 const currentExtra = item.extra;
@@ -36,7 +36,7 @@ const MemoryAdapter = () => {
         setExtra(key, extra) {
             return this.getItem(key).then((item) => {
                 if (!item) {
-                    return Promise.resolve(undefined);
+                    return undefined;
                 }
 
                 return this.setItem(key, item.value, extra).then((newItem) => newItem.extra);

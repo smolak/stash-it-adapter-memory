@@ -93,7 +93,7 @@ describe('MemoryAdapter', () => {
             });
         });
 
-        it('should add extra to existing one and return combined extra', function(done) {
+        it('should add extra to existing one and return combined extra', (done) => {
             const adapter = createMemoryAdapter();
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA).then(() => {
@@ -122,7 +122,7 @@ describe('MemoryAdapter', () => {
             });
         });
 
-        it('should add extra to existing one', function(done) {
+        it('should add extra to existing one', (done) => {
             const adapter = createMemoryAdapter();
 
             adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA).then(() => {
@@ -139,7 +139,7 @@ describe('MemoryAdapter', () => {
         });
 
         context('when added extra contains properties of existing extra', () => {
-            it('should overwrite existing properties with new ones', function(done) {
+            it('should overwrite existing properties with new ones', (done) => {
                 const adapter = createMemoryAdapter();
                 const extraToSet = Object.assign({}, FOO_EXTRA, { something: 'else' });
                 const addedExtra = { something: 'entirely different' };
@@ -177,7 +177,7 @@ describe('MemoryAdapter', () => {
             expect(adapter.setExtra(FOO_KEY, newExtra)).to.eventually.deep.equal(newExtra);
         });
 
-        it('should store extra', function(done) {
+        it('should store extra', (done) => {
             const adapter = createMemoryAdapter();
             const newExtra = { something: 'else' };
 
