@@ -196,22 +196,19 @@ describe('MemoryAdapter', () => {
         context('when item exists', () => {
             it('should return extra', () => {
                 const adapter = createMemoryAdapter();
+                const expectedExtra = { some: 'extra' };
 
                 adapter.setItem(FOO_KEY, FOO_VALUE, { some: 'extra' });
 
-                const extra = adapter.getExtra(FOO_KEY);
-                const expectedExtra = { some: 'extra' };
-
-                expect(extra).to.deep.equal(expectedExtra);
+                expect(adapter.getExtra(FOO_KEY)).to.eventually.be.deep.equal(expectedExtra);
             });
         });
 
         context('when item does not exist', () => {
             it('should return undefined', () => {
                 const adapter = createMemoryAdapter();
-                const extra = adapter.getExtra(NONEXISTENT_KEY);
 
-                expect(extra).to.be.undefined;
+                expect(adapter.getExtra(NONEXISTENT_KEY)).to.eventually.equal(undefined);
             });
         });
     });

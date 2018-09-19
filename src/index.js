@@ -43,8 +43,9 @@ const MemoryAdapter = () => {
 
         getExtra(key) {
             const item = data[key];
+            const result = item ? item.extra : undefined;
 
-            return item ? item.extra : undefined;
+            return Promise.resolve(result);
         },
 
         hasItem(key) {
