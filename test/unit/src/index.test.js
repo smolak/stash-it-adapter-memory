@@ -114,6 +114,33 @@ describe('MemoryAdapter', () => {
             });
         });
 
+        it('should return combined extra', () => {
+            const adapter = createMemoryAdapter();
+
+            adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA).then(() => {
+                const addedExtra = { something: 'else' };
+                const expectedCombinedExtra = Object.assign({}, FOO_EXTRA, addedExtra);
+
+                expect(adapter.addExtra(FOO_KEY, addedExtra)).to.eventually.deep.equal(expectedCombinedExtra);
+            });
+        });
+
+        it('should add extra to existing one', function(done) {
+            const adapter = createMemoryAdapter();
+
+            adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA).then(() => {
+                const addedExtra = { something: 'else' };
+
+                adapter.addExtra(FOO_KEY, addedExtra).then((extra) => {
+                    const item = adapter.getItem(FOO_KEY);
+
+                    expect(item.extra).to.deep.equal(extra);
+
+                    done();
+                });
+            });
+        });
+
         context('when added extra contains properties of existing extra', () => {
             it('should overwrite existing properties with new ones', function(done) {
                 const adapter = createMemoryAdapter();
@@ -143,7 +170,16 @@ describe('MemoryAdapter', () => {
             });
         });
 
-        it('should store and return extra', function() {
+        it('should return extra', () => {
+            const adapter = createMemoryAdapter();
+            const newExtra = { something: 'else' };
+
+            adapter.setItem(FOO_KEY, FOO_VALUE, FOO_EXTRA);
+
+            expect(adapter.setExtra(FOO_KEY, newExtra)).to.eventually.deep.equal(newExtra);
+        });
+
+        it('should store extra', function(done) {
             const adapter = createMemoryAdapter();
             const newExtra = { something: 'else' };
 
@@ -151,8 +187,9 @@ describe('MemoryAdapter', () => {
             adapter.setExtra(FOO_KEY, newExtra).then((extra) => {
                 const item = adapter.getItem(FOO_KEY);
 
-                expect(extra).to.deep.equal(newExtra);
-                expect(extra).to.deep.equal(item.extra);
+                expect(item.extra).to.deep.equal(extra);
+
+                done();
             });
         });
     });
