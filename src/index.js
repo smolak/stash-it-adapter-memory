@@ -5,7 +5,7 @@ const data = {};
 const MemoryAdapter = () => {
     return {
         buildKey(key) {
-            return key;
+            return Promise.resolve(key);
         },
 
         setItem(key, value, extra = {}) {

@@ -23,7 +23,7 @@ describe('MemoryAdapter', () => {
         it('should return built key', () => {
             const memoryAdapter = createMemoryAdapter();
 
-            expect(memoryAdapter.buildKey('key')).to.eq('key');
+            expect(memoryAdapter.buildKey('key')).to.eventually.equal('key');
         });
     });
 
